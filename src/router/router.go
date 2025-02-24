@@ -1,7 +1,11 @@
 package router
 
-import "github.com/gorilla/mux"
+import (
+	"github.com/gorilla/mux"
+	"impacta-book/src/router/routes"
+)
 
 func Generate() *mux.Router {
-	return mux.NewRouter()
+	r := mux.NewRouter()
+	return routes.Configure(r)
 }

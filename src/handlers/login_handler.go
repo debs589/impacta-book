@@ -1,8 +1,11 @@
 package handlers
 
-import "net/http"
+import (
+	"impacta-book/src/utils"
+	"net/http"
+)
 
 func LoadLoginPage(w http.ResponseWriter, r *http.Request) {
-	w.Write([]byte("Login Page"))
+	utils.RenderTemplate(w, "login.html", nil)
 
 }
