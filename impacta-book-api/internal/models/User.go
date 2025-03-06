@@ -3,7 +3,7 @@ package models
 import "time"
 
 type User struct {
-	ID        uint64    `json:"id,omitempty"`
+	ID        int       `json:"id,omitempty"`
 	Name      string    `json:"name,omitempty"`
 	Nickname  string    `json:"nickname,omitempty"`
 	Email     string    `json:"email,omitempty"`
@@ -12,9 +12,9 @@ type User struct {
 }
 
 type UserService interface {
-	CreateUser(user *User) error
+	CreateUser(user User) (int, error)
 }
 
 type UserRepository interface {
-	CreateUser(user *User) error
+	CreateUser(user User) (int, error)
 }
