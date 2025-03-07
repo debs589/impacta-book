@@ -53,7 +53,7 @@ func (s *DefaultUserService) validate(user models.User) error {
 	if len(user.Password) == 0 {
 		return errors.New("Password is required and cannot be empty")
 	}
-	if error := checkmail.ValidateFormat(user.Email); error != nil {
+	if emailCheck := checkmail.ValidateFormat(user.Email); emailCheck != nil {
 		return errors.New("Email is invalid")
 	}
 
