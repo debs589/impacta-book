@@ -10,7 +10,7 @@ type User struct {
 }
 
 type UserService interface {
-	CreateUser(User) (int, error)
+	CreateUser(User, string) (int, error)
 	GetUsers(string) ([]User, error)
 	GetUser(int) (User, error)
 }

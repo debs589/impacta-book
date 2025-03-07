@@ -28,7 +28,7 @@ func (h *UserHandler) CreateUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	id, err := h.service.CreateUser(user)
+	id, err := h.service.CreateUser(user, "register")
 	if err != nil {
 		if errors.Is(err, utils.ErrInvalidArguments) {
 			utils.Error(w, http.StatusBadRequest, err)

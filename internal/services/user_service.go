@@ -2,6 +2,7 @@ package services
 
 import (
 	"api/internal/models"
+	"api/internal/security"
 	"api/internal/utils"
 	"errors"
 	"github.com/badoux/checkmail"
@@ -16,14 +17,14 @@ func NewUserService(rp models.UserRepository) models.UserService {
 	return &DefaultUserService{rp}
 }
 
-func (s *DefaultUserService) CreateUser(user models.User) (int, error) {
-	verify := s.validate(user)
+func (s *DefaultUserService) CreateUser(user models.User, step string) (int, error) {
+	verify := s.validate(user, step)
 
 	if verify != nil {
 		return 0, utils.ErrInvalidArguments
 	}
 
-	formatUser, err := s.format(user)
+	formatUser, err := s.format(user, step)
 	if err != nil {
 		return 0, utils.ErrInvalidArguments
 	}
@@ -37,7 +38,7 @@ func (s *DefaultUserService) CreateUser(user models.User) (int, error) {
 	return id, nil
 }
 
-func (s *DefaultUserService) validate(user models.User) error {
+func (s *DefaultUserService) validate(user models.User, step string) error {
 	if len(user.Name) == 0 {
 		return errors.New("Name is required and cannot be empty")
 	}
@@ -50,20 +51,30 @@ func (s *DefaultUserService) validate(user models.User) error {
 		return errors.New("Email is required and cannot be empty")
 	}
 
-	if len(user.Password) == 0 {
-		return errors.New("Password is required and cannot be empty")
-	}
 	if emailCheck := checkmail.ValidateFormat(user.Email); emailCheck != nil {
-		return errors.New("Email is invalid")
+		return emailCheck
+	}
+
+	if len(user.Password) == 0 && step == "register" {
+		return errors.New("Password is required and cannot be empty")
 	}
 
 	return nil
 }
 
-func (s *DefaultUserService) format(user models.User) (models.User, error) {
+func (s *DefaultUserService) format(user models.User, step string) (models.User, error) {
 	user.Name = strings.TrimSpace(user.Name)
 	user.Email = strings.TrimSpace(user.Email)
 	user.Nickname = strings.TrimSpace(user.Nickname)
+
+	if step == "register" {
+		passwordHash, err := security.Hash(user.Password)
+		if err != nil {
+			return models.User{}, err
+		}
+
+		user.Password = string(passwordHash)
+	}
 
 	return user, nil
 }
