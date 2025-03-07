@@ -10,7 +10,7 @@ import (
 )
 
 func main() {
-	err := godotenv.Load("/Users/dfcarvalho/Documents/Impacta-book/impacta-book-api/impacta-book-api/.env")
+	err := godotenv.Load("/Users/dfcarvalho/Documents/Impacta-book/impacta-book-api/.env")
 	if err != nil {
 		panic(err)
 	}
