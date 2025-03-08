@@ -95,3 +95,11 @@ func (s *DefaultUserService) GetUser(id int) (models.User, error) {
 	}
 	return user, nil
 }
+
+func (s *DefaultUserService) GetUserByEmail(email string) (models.User, error) {
+	user, err := s.rp.GetUserByEmail(email)
+	if err != nil {
+		return models.User{}, err
+	}
+	return user, nil
+}

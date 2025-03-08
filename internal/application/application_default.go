@@ -74,6 +74,11 @@ func (a *ApplicationDefault) SetUp() (err error) {
 		panic(err)
 	}
 
+	err = routes.NewLoginRoutes(router, userService)
+	if err != nil {
+		panic(err)
+	}
+
 	a.router = router
 
 	return nil

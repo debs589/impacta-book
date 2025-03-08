@@ -13,10 +13,12 @@ type UserService interface {
 	CreateUser(User, string) (int, error)
 	GetUsers(string) ([]User, error)
 	GetUser(int) (User, error)
+	GetUserByEmail(string) (User, error)
 }
 
 type UserRepository interface {
 	CreateUser(user User) (int, error)
 	GetUsers(string) ([]User, error)
 	GetUser(int) (User, error)
+	GetUserByEmail(string) (User, error)
 }
