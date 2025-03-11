@@ -87,3 +87,18 @@ func (r *DefaultUserRepository) GetUserByEmail(email string) (models.User, error
 
 	return user, nil
 }
+
+func (r *DefaultUserRepository) UpdateUser(id int, user models.User) error {
+	statement, err := r.db.Prepare("UPDATE users SET name = ?, nickName = ?, email = ? WHERE id = ?")
+	if err != nil {
+		return err
+	}
+
+	defer statement.Close()
+
+	_, err = statement.Exec(user.Name, user.Nickname, user.Email, id)
+	if err != nil {
+		return err
+	}
+	return nil
+}

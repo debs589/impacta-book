@@ -13,6 +13,7 @@ func NewUserRoutes(mux *chi.Mux, service models.UserService) error {
 		router.Post("/", userHandler.CreateUser)
 		router.Get("/user", userHandler.GetUsers)
 		router.Get("/{id}", userHandler.GetUser)
+		router.Put("/{id}", userHandler.UpdateUser)
 	})
 
 	return nil

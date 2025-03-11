@@ -74,3 +74,28 @@ func (h *UserHandler) GetUser(w http.ResponseWriter, r *http.Request) {
 	utils.JSON(w, http.StatusOK, user)
 
 }
+
+func (h *UserHandler) UpdateUser(w http.ResponseWriter, r *http.Request) {
+	id, err := strconv.Atoi(chi.URLParam(r, "id"))
+	if err != nil {
+		utils.Error(w, http.StatusBadRequest, err)
+		return
+	}
+
+	var reqBody models.User
+	if err := json.NewDecoder(r.Body).Decode(&reqBody); err != nil {
+		utils.Error(w, http.StatusUnprocessableEntity, err)
+		return
+	}
+
+	err = h.service.UpdateUser(id, reqBody, "update")
+	if err != nil {
+		if errors.Is(err, utils.ErrInvalidArguments) {
+			utils.Error(w, http.StatusBadRequest, err)
+			return
+		}
+		utils.Error(w, http.StatusInternalServerError, err)
+		return
+	}
+	utils.JSON(w, http.StatusNoContent, nil)
+}

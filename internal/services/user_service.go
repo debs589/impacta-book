@@ -103,3 +103,22 @@ func (s *DefaultUserService) GetUserByEmail(email string) (models.User, error) {
 	}
 	return user, nil
 }
+
+func (s *DefaultUserService) UpdateUser(id int, user models.User, step string) error {
+	verify := s.validate(user, step)
+
+	if verify != nil {
+		return verify
+	}
+
+	formatUser, err := s.format(user, step)
+	if err != nil {
+		return err
+	}
+
+	err = s.rp.UpdateUser(id, formatUser)
+	if err != nil {
+		return err
+	}
+	return nil
+}
