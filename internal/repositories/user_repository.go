@@ -102,3 +102,18 @@ func (r *DefaultUserRepository) UpdateUser(id int, user models.User) error {
 	}
 	return nil
 }
+
+func (r *DefaultUserRepository) DeleteUser(id int) error {
+	statement, err := r.db.Prepare("DELETE FROM users WHERE id = ?")
+	if err != nil {
+		return err
+	}
+	defer statement.Close()
+
+	_, err = statement.Exec(id)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}

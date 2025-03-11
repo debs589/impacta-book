@@ -14,6 +14,7 @@ func NewUserRoutes(mux *chi.Mux, service models.UserService) error {
 		router.Get("/user", userHandler.GetUsers)
 		router.Get("/{id}", userHandler.GetUser)
 		router.Put("/{id}", userHandler.UpdateUser)
+		router.Delete("/{id}", userHandler.DeleteUser)
 	})
 
 	return nil

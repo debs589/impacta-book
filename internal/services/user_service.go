@@ -122,3 +122,21 @@ func (s *DefaultUserService) UpdateUser(id int, user models.User, step string) e
 	}
 	return nil
 }
+
+func (s *DefaultUserService) DeleteUser(id int) error {
+	userExists, err := s.rp.GetUser(id)
+	if err != nil {
+		return err
+	}
+
+	if userExists == (models.User{}) {
+		return utils.ErrNotFound
+	}
+
+	err = s.rp.DeleteUser(id)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}

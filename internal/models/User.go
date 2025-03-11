@@ -15,6 +15,7 @@ type UserService interface {
 	GetUser(int) (User, error)
 	GetUserByEmail(string) (User, error)
 	UpdateUser(int, User, string) error
+	DeleteUser(int) error
 }
 
 type UserRepository interface {
@@ -23,4 +24,5 @@ type UserRepository interface {
 	GetUser(int) (User, error)
 	GetUserByEmail(string) (User, error)
 	UpdateUser(int, User) error
+	DeleteUser(int) error
 }
