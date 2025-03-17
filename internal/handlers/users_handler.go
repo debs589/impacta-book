@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"api/internal/authentication"
 	"api/internal/models"
 	"api/internal/utils"
 	"encoding/json"
@@ -82,6 +83,16 @@ func (h *UserHandler) UpdateUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	userIDToken, err := authentication.ExtractUserID(r)
+	if err != nil {
+		utils.Error(w, http.StatusUnauthorized, err)
+	}
+
+	if id != userIDToken {
+		utils.Error(w, http.StatusForbidden, utils.ErrForbidden)
+		return
+	}
+
 	var reqBody models.User
 	if err := json.NewDecoder(r.Body).Decode(&reqBody); err != nil {
 		utils.Error(w, http.StatusUnprocessableEntity, err)
@@ -104,6 +115,16 @@ func (h *UserHandler) DeleteUser(w http.ResponseWriter, r *http.Request) {
 	id, err := strconv.Atoi(chi.URLParam(r, "id"))
 	if err != nil {
 		utils.Error(w, http.StatusBadRequest, err)
+		return
+	}
+
+	userIDToken, err := authentication.ExtractUserID(r)
+	if err != nil {
+		utils.Error(w, http.StatusUnauthorized, err)
+	}
+
+	if id != userIDToken {
+		utils.Error(w, http.StatusForbidden, utils.ErrForbidden)
 		return
 	}
 
