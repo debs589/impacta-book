@@ -17,6 +17,7 @@ func NewUserRoutes(mux *chi.Mux, service models.UserService) error {
 		router.With(middlewares.Authenticate).Get("/", userHandler.GetUsers)
 		router.With(middlewares.Authenticate).Put("/{id}", userHandler.UpdateUser)
 		router.With(middlewares.Authenticate).Delete("/{id}", userHandler.DeleteUser)
+		router.With(middlewares.Authenticate).Post("/{id}/follow", userHandler.FollowUser)
 	})
 
 	return nil

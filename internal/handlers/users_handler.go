@@ -121,6 +121,7 @@ func (h *UserHandler) DeleteUser(w http.ResponseWriter, r *http.Request) {
 	userIDToken, err := authentication.ExtractUserID(r)
 	if err != nil {
 		utils.Error(w, http.StatusUnauthorized, err)
+		return
 	}
 
 	if id != userIDToken {
@@ -133,5 +134,32 @@ func (h *UserHandler) DeleteUser(w http.ResponseWriter, r *http.Request) {
 		utils.Error(w, http.StatusInternalServerError, err)
 		return
 	}
+	utils.JSON(w, http.StatusNoContent, nil)
+}
+
+func (h *UserHandler) FollowUser(w http.ResponseWriter, r *http.Request) {
+	followerId, err := authentication.ExtractUserID(r)
+	if err != nil {
+		utils.Error(w, http.StatusUnauthorized, err)
+		return
+	}
+
+	userId, err := strconv.Atoi(chi.URLParam(r, "id"))
+	if err != nil {
+		utils.Error(w, http.StatusBadRequest, err)
+		return
+	}
+
+	if followerId == userId {
+		utils.Error(w, http.StatusForbidden, utils.ErrForbidden)
+		return
+	}
+
+	err = h.service.FollowUser(followerId, userId)
+	if err != nil {
+		utils.Error(w, http.StatusInternalServerError, err)
+		return
+	}
+
 	utils.JSON(w, http.StatusNoContent, nil)
 }

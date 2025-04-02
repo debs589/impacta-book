@@ -117,3 +117,18 @@ func (r *DefaultUserRepository) DeleteUser(id int) error {
 
 	return nil
 }
+
+func (r *DefaultUserRepository) FollowUser(followerId, userId int) error {
+	statement, err := r.db.Prepare("INSERT INTO followers (follower_id, user_id) values(?, ?)")
+	if err != nil {
+		return err
+	}
+	defer statement.Close()
+
+	_, err = statement.Exec(followerId, userId)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
