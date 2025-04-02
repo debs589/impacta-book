@@ -21,7 +21,7 @@ CREATE TABLE followers(
                                ON DELETE CASCADE,
 
                            follower_id int not null,
-                           FOREIGN KEY (follower_id)
+                           FOREIGN KEY (user_id)
                                REFERENCES users(id)
                                ON DELETE CASCADE,
 
