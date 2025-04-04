@@ -149,3 +149,12 @@ func (s *DefaultUserService) FollowUser(followerId, userId int) error {
 
 	return nil
 }
+
+func (s *DefaultUserService) UnfollowUser(userId, followerId int) error {
+	err := s.rp.UnfollowUser(userId, followerId)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}

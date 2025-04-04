@@ -132,3 +132,18 @@ func (r *DefaultUserRepository) FollowUser(followerId, userId int) error {
 
 	return nil
 }
+
+func (r *DefaultUserRepository) UnfollowUser(userId, followerId int) error {
+	statement, err := r.db.Prepare("DELETE FROM followers WHERE user_id = ? and follower_id = ?")
+	if err != nil {
+		return err
+	}
+	defer statement.Close()
+
+	_, err = statement.Exec(userId, followerId)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}

@@ -36,7 +36,7 @@ func (h *LoginHandler) Login(w http.ResponseWriter, r *http.Request) {
 		utils.Error(w, http.StatusUnauthorized, err)
 		return
 	}
-	userID := strconv.Itoa(user.ID)
+	userID := strconv.Itoa(userSaveAtDb.ID)
 
 	token, err := authentication.CreateToken(userSaveAtDb.ID)
 	if err != nil {
