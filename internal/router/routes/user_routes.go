@@ -20,6 +20,7 @@ func NewUserRoutes(mux *chi.Mux, service models.UserService) error {
 		router.With(middlewares.Authenticate).Post("/{id}/follow", userHandler.FollowUser)
 		router.With(middlewares.Authenticate).Post("/{id}/unfollow", userHandler.UnfollowUser)
 		router.With(middlewares.Authenticate).Post("/{id}/followers", userHandler.GetFollowers)
+		router.With(middlewares.Authenticate).Post("/{id}/following", userHandler.GetFollowing)
 	})
 
 	return nil

@@ -167,3 +167,12 @@ func (s *DefaultUserService) GetFollowers(userId int) ([]models.User, error) {
 
 	return followers, nil
 }
+
+func (s *DefaultUserService) GetFollowing(userId int) ([]models.User, error) {
+	following, err := s.rp.GetFollowing(userId)
+	if err != nil {
+		return []models.User{}, err
+	}
+
+	return following, nil
+}

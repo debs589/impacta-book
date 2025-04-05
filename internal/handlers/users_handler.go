@@ -206,3 +206,19 @@ func (h *UserHandler) GetFollowers(w http.ResponseWriter, r *http.Request) {
 
 	utils.JSON(w, http.StatusOK, followers)
 }
+
+func (h *UserHandler) GetFollowing(w http.ResponseWriter, r *http.Request) {
+	userId, err := strconv.Atoi(chi.URLParam(r, "id"))
+	if err != nil {
+		utils.Error(w, http.StatusBadRequest, err)
+		return
+	}
+
+	following, err := h.service.GetFollowing(userId)
+	if err != nil {
+		utils.Error(w, http.StatusInternalServerError, err)
+		return
+	}
+
+	utils.JSON(w, http.StatusOK, following)
+}
