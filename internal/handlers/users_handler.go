@@ -190,3 +190,19 @@ func (h *UserHandler) UnfollowUser(w http.ResponseWriter, r *http.Request) {
 
 	utils.JSON(w, http.StatusNoContent, nil)
 }
+
+func (h *UserHandler) GetFollowers(w http.ResponseWriter, r *http.Request) {
+	userId, err := strconv.Atoi(chi.URLParam(r, "id"))
+	if err != nil {
+		utils.Error(w, http.StatusBadRequest, err)
+		return
+	}
+
+	followers, err := h.service.GetFollowers(userId)
+	if err != nil {
+		utils.Error(w, http.StatusInternalServerError, err)
+		return
+	}
+
+	utils.JSON(w, http.StatusOK, followers)
+}

@@ -147,3 +147,34 @@ func (r *DefaultUserRepository) UnfollowUser(userId, followerId int) error {
 
 	return nil
 }
+
+func (r *DefaultUserRepository) GetFollowers(userId int) ([]models.User, error) {
+	rows, err := r.db.Query("SELECT id, name, nickName, email, createdAt FROM users u "+
+		"INNER JOIN followers f ON u.id = f.follower_id WHERE f.user_id = ?", userId)
+
+	if err != nil {
+		return []models.User{}, err
+	}
+	defer rows.Close()
+
+	followers := []models.User{}
+
+	for rows.Next() {
+		user := models.User{}
+
+		err = rows.Scan(&user.ID, &user.Name, &user.Nickname, &user.Email, &user.CreatedAt)
+		if err != nil {
+			return nil, err
+		}
+
+		followers = append(followers, user)
+	}
+
+	err = rows.Err()
+	if err != nil {
+		return []models.User{}, err
+	}
+
+	return followers, nil
+
+}

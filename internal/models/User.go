@@ -18,6 +18,7 @@ type UserService interface {
 	DeleteUser(int) error
 	FollowUser(int, int) error
 	UnfollowUser(int, int) error
+	GetFollowers(int) ([]User, error)
 }
 
 type UserRepository interface {
@@ -29,4 +30,5 @@ type UserRepository interface {
 	DeleteUser(int) error
 	FollowUser(int, int) error
 	UnfollowUser(int, int) error
+	GetFollowers(int) ([]User, error)
 }
