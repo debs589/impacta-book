@@ -12,6 +12,7 @@ func NewPublicationRoutes(mux *chi.Mux, service models.PublicationService) error
 
 	mux.Route("/publication", func(router chi.Router) {
 		router.With(middlewares.Authenticate).Post("/", publicationHandler.CreatePublication)
+		router.With(middlewares.Authenticate).Get("/{id}", publicationHandler.GetPublication)
 
 	})
 

@@ -31,3 +31,22 @@ func (r *DefaultPublicationRepository) CreatePublication(publication models.Publ
 	}
 	return int(id), nil
 }
+
+func (r *DefaultPublicationRepository) GetPublication(id int) (models.Publication, error) {
+	publication := models.Publication{}
+
+	row := r.db.QueryRow("SELECT p.*, u.nickName FROM publications p inner join users u on u.id = p.author_id WHERE p.id = ?", id)
+	err := row.Scan(&publication.ID,
+		&publication.Title,
+		&publication.Content,
+		&publication.AuthorID,
+		&publication.Likes,
+		&publication.CreatedAt,
+		&publication.AuthorNick)
+
+	if err != nil {
+		return models.Publication{}, err
+	}
+
+	return publication, nil
+}
