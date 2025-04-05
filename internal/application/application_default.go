@@ -79,6 +79,14 @@ func (a *ApplicationDefault) SetUp() (err error) {
 		panic(err)
 	}
 
+	publicationRepo := repositories.NewPublicationRepository(a.db)
+	publicationService := services.NewPublicationService(publicationRepo)
+	err = routes.NewPublicationRoutes(router, publicationService)
+
+	if err != nil {
+		panic(err)
+	}
+
 	a.router = router
 
 	return nil
