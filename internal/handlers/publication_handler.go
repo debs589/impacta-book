@@ -65,3 +65,19 @@ func (h *PublicationHandler) GetPublication(w http.ResponseWriter, r *http.Reque
 
 	utils.JSON(w, http.StatusOK, publication)
 }
+
+func (h *PublicationHandler) GetPublications(w http.ResponseWriter, r *http.Request) {
+	userIDToken, err := authentication.ExtractUserID(r)
+	if err != nil {
+		utils.Error(w, http.StatusUnauthorized, err)
+		return
+	}
+
+	publications, err := h.service.GetPublications(userIDToken)
+	if err != nil {
+		utils.Error(w, http.StatusInternalServerError, err)
+		return
+	}
+
+	utils.JSON(w, http.StatusOK, publications)
+}

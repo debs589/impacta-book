@@ -13,9 +13,11 @@ type Publication struct {
 type PublicationService interface {
 	CreatePublication(Publication) (int, error)
 	GetPublication(id int) (Publication, error)
+	GetPublications(id int) ([]Publication, error)
 }
 
 type PublicationRepository interface {
 	CreatePublication(Publication) (int, error)
 	GetPublication(id int) (Publication, error)
+	GetPublications(id int) ([]Publication, error)
 }

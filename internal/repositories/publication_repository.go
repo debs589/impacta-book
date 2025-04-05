@@ -50,3 +50,40 @@ func (r *DefaultPublicationRepository) GetPublication(id int) (models.Publicatio
 
 	return publication, nil
 }
+
+func (r *DefaultPublicationRepository) GetPublications(id int) ([]models.Publication, error) {
+
+	rows, err := r.db.Query("SELECT DISTINCT p.*, u.nickName from publications p inner join users u on u.id = p.author_id inner join followers f on p.author_id = f.user_id where u.id = ? or f.follower_id = ? order by 1 desc", id, id)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	publications := []models.Publication{}
+
+	for rows.Next() {
+		publication := models.Publication{}
+
+		err := rows.Scan(&publication.ID,
+			&publication.Title,
+			&publication.Content,
+			&publication.AuthorID,
+			&publication.Likes,
+			&publication.CreatedAt,
+			&publication.AuthorNick)
+
+		if err != nil {
+			return nil, err
+		}
+
+		publications = append(publications, publication)
+	}
+
+	err = rows.Err()
+	if err != nil {
+		return nil, err
+	}
+
+	return publications, nil
+
+}
