@@ -6,6 +6,7 @@ import (
 	"api/internal/utils"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"github.com/go-chi/chi/v5"
 	"net/http"
 	"strconv"
@@ -80,4 +81,46 @@ func (h *PublicationHandler) GetPublications(w http.ResponseWriter, r *http.Requ
 	}
 
 	utils.JSON(w, http.StatusOK, publications)
+}
+
+func (h *PublicationHandler) UpdatePublication(w http.ResponseWriter, r *http.Request) {
+	userIDToken, err := authentication.ExtractUserID(r)
+	if err != nil {
+		utils.Error(w, http.StatusUnauthorized, err)
+		return
+	}
+
+	id, err := strconv.Atoi(chi.URLParam(r, "id"))
+	if err != nil {
+		utils.Error(w, http.StatusBadRequest, err)
+		return
+	}
+
+	publication, err := h.service.GetPublication(id)
+	if err != nil {
+		utils.Error(w, http.StatusInternalServerError, err)
+		return
+	}
+
+	if publication.AuthorID != userIDToken {
+		utils.Error(w, http.StatusUnauthorized, fmt.Errorf("It's not possible to edit a publication from another user"))
+		return
+	}
+
+	var reqBody models.Publication
+	if err := json.NewDecoder(r.Body).Decode(&reqBody); err != nil {
+		utils.Error(w, http.StatusUnprocessableEntity, err)
+		return
+	}
+
+	err = h.service.UpdatePublication(id, reqBody)
+	if err != nil {
+		if errors.Is(err, utils.ErrInvalidArguments) {
+			utils.Error(w, http.StatusBadRequest, err)
+			return
+		}
+		utils.Error(w, http.StatusInternalServerError, err)
+		return
+	}
+	utils.JSON(w, http.StatusNoContent, nil)
 }

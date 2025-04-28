@@ -49,6 +49,24 @@ func (s *DefaultPublicationService) GetPublications(id int) ([]models.Publicatio
 	return publication, nil
 }
 
+func (s *DefaultPublicationService) UpdatePublication(id int, publication models.Publication) error {
+	verify := s.validate(publication)
+
+	if verify != nil {
+		return utils.ErrInvalidArguments
+	}
+
+	s.format(&publication)
+
+	err := s.rp.UpdatePublication(id, publication)
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func (s *DefaultPublicationService) validate(publication models.Publication) error {
 	if len(publication.Title) == 0 {
 		return errors.New("Title is required and cannot be empty")

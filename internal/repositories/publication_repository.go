@@ -87,3 +87,19 @@ func (r *DefaultPublicationRepository) GetPublications(id int) ([]models.Publica
 	return publications, nil
 
 }
+
+func (r *DefaultPublicationRepository) UpdatePublication(id int, publication models.Publication) error {
+	statement, err := r.db.Prepare("UPDATE publications SET title = ?, content = ? WHERE id = ?")
+	if err != nil {
+		return err
+	}
+
+	defer statement.Close()
+
+	_, err = statement.Exec(publication.Title, publication.Content, id)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
