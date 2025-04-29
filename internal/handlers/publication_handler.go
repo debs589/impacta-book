@@ -171,3 +171,33 @@ func (h *PublicationHandler) GetPublicationsByUser(w http.ResponseWriter, r *htt
 
 	utils.JSON(w, http.StatusOK, publications)
 }
+
+func (h *PublicationHandler) LikePublication(w http.ResponseWriter, r *http.Request) {
+	id, err := strconv.Atoi(chi.URLParam(r, "id"))
+	if err != nil {
+		utils.Error(w, http.StatusBadRequest, err)
+	}
+
+	err = h.service.LikePublication(id)
+	if err != nil {
+		utils.Error(w, http.StatusInternalServerError, err)
+		return
+	}
+
+	utils.JSON(w, http.StatusNoContent, nil)
+}
+
+func (h *PublicationHandler) UnlikePublication(w http.ResponseWriter, r *http.Request) {
+	id, err := strconv.Atoi(chi.URLParam(r, "id"))
+	if err != nil {
+		utils.Error(w, http.StatusBadRequest, err)
+	}
+
+	err = h.service.UnlikePublication(id)
+	if err != nil {
+		utils.Error(w, http.StatusInternalServerError, err)
+		return
+	}
+
+	utils.JSON(w, http.StatusNoContent, nil)
+}

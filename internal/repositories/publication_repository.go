@@ -156,3 +156,35 @@ func (r *DefaultPublicationRepository) GetPublicationsByUser(userID int) ([]mode
 	return publications, nil
 
 }
+
+func (r *DefaultPublicationRepository) LikePublication(id int) error {
+	statement, err := r.db.Prepare("UPDATE publications SET likes = likes + 1 WHERE id = ?")
+	if err != nil {
+		return err
+	}
+
+	defer statement.Close()
+
+	_, err = statement.Exec(id)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (r *DefaultPublicationRepository) UnlikePublication(id int) error {
+	statement, err := r.db.Prepare("UPDATE publications SET likes = CASE WHEN likes > 0 THEN likes - 1 ELSE 0 END WHERE id = ?")
+	if err != nil {
+		return err
+	}
+
+	defer statement.Close()
+
+	_, err = statement.Exec(id)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
