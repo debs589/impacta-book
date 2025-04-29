@@ -80,6 +80,15 @@ func (s *DefaultPublicationService) DeletePublication(id int) error {
 	return nil
 }
 
+func (s *DefaultPublicationService) GetPublicationsByUser(id int) ([]models.Publication, error) {
+	publications, err := s.rp.GetPublicationsByUser(id)
+	if err != nil {
+		return []models.Publication{}, err
+	}
+
+	return publications, nil
+}
+
 func (s *DefaultPublicationService) validate(publication models.Publication) error {
 	if len(publication.Title) == 0 {
 		return errors.New("Title is required and cannot be empty")

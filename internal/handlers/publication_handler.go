@@ -156,3 +156,18 @@ func (h *PublicationHandler) DeletePublication(w http.ResponseWriter, r *http.Re
 	}
 	utils.JSON(w, http.StatusNoContent, nil)
 }
+
+func (h *PublicationHandler) GetPublicationsByUser(w http.ResponseWriter, r *http.Request) {
+	userID, err := strconv.Atoi(chi.URLParam(r, "user_id"))
+	if err != nil {
+		utils.Error(w, http.StatusBadRequest, err)
+	}
+
+	publications, err := h.service.GetPublications(userID)
+	if err != nil {
+		utils.Error(w, http.StatusInternalServerError, err)
+		return
+	}
+
+	utils.JSON(w, http.StatusOK, publications)
+}

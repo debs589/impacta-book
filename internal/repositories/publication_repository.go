@@ -119,3 +119,40 @@ func (r *DefaultPublicationRepository) DeletePublication(id int) error {
 
 	return nil
 }
+
+func (r *DefaultPublicationRepository) GetPublicationsByUser(userID int) ([]models.Publication, error) {
+
+	rows, err := r.db.Query("SELECT p.*, u.nickName from publications p join users u on u.id = p.author_id WHERE p.author_id = ?", userID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	publications := []models.Publication{}
+
+	for rows.Next() {
+		publication := models.Publication{}
+
+		err := rows.Scan(&publication.ID,
+			&publication.Title,
+			&publication.Content,
+			&publication.AuthorID,
+			&publication.Likes,
+			&publication.CreatedAt,
+			&publication.AuthorNick)
+
+		if err != nil {
+			return nil, err
+		}
+
+		publications = append(publications, publication)
+	}
+
+	err = rows.Err()
+	if err != nil {
+		return nil, err
+	}
+
+	return publications, nil
+
+}

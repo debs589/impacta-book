@@ -12,7 +12,6 @@ func NewUserRoutes(mux *chi.Mux, service models.UserService) error {
 
 	mux.Route("/user", func(router chi.Router) {
 		router.Post("/", userHandler.CreateUser)
-		router.With(middlewares.Authenticate).Get("/", userHandler.GetUser)
 		router.With(middlewares.Authenticate).Get("/{id}", userHandler.GetUser)
 		router.With(middlewares.Authenticate).Get("/", userHandler.GetUsers)
 		router.With(middlewares.Authenticate).Put("/{id}", userHandler.UpdateUser)
