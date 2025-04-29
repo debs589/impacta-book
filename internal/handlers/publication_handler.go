@@ -124,3 +124,35 @@ func (h *PublicationHandler) UpdatePublication(w http.ResponseWriter, r *http.Re
 	}
 	utils.JSON(w, http.StatusNoContent, nil)
 }
+
+func (h *PublicationHandler) DeletePublication(w http.ResponseWriter, r *http.Request) {
+	userIDToken, err := authentication.ExtractUserID(r)
+	if err != nil {
+		utils.Error(w, http.StatusUnauthorized, err)
+		return
+	}
+
+	id, err := strconv.Atoi(chi.URLParam(r, "id"))
+	if err != nil {
+		utils.Error(w, http.StatusBadRequest, err)
+		return
+	}
+
+	publication, err := h.service.GetPublication(id)
+	if err != nil {
+		utils.Error(w, http.StatusInternalServerError, err)
+		return
+	}
+
+	if publication.AuthorID != userIDToken {
+		utils.Error(w, http.StatusUnauthorized, fmt.Errorf("It's not possible to delete a publication from another user"))
+		return
+	}
+
+	err = h.service.DeletePublication(id)
+	if err != nil {
+		utils.Error(w, http.StatusInternalServerError, err)
+		return
+	}
+	utils.JSON(w, http.StatusNoContent, nil)
+}

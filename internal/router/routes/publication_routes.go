@@ -15,6 +15,7 @@ func NewPublicationRoutes(mux *chi.Mux, service models.PublicationService) error
 		router.With(middlewares.Authenticate).Get("/{id}", publicationHandler.GetPublication)
 		router.With(middlewares.Authenticate).Get("/", publicationHandler.GetPublications)
 		router.With(middlewares.Authenticate).Put("/{id}", publicationHandler.UpdatePublication)
+		router.With(middlewares.Authenticate).Delete("/{id}", publicationHandler.DeletePublication)
 	})
 
 	return nil

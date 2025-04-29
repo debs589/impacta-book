@@ -103,3 +103,19 @@ func (r *DefaultPublicationRepository) UpdatePublication(id int, publication mod
 
 	return nil
 }
+
+func (r *DefaultPublicationRepository) DeletePublication(id int) error {
+	statement, err := r.db.Prepare("DELETE FROM publications WHERE id = ?")
+	if err != nil {
+		return err
+	}
+
+	defer statement.Close()
+
+	_, err = statement.Exec(id)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}

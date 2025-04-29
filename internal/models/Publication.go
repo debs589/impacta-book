@@ -15,6 +15,7 @@ type PublicationService interface {
 	GetPublication(int) (Publication, error)
 	GetPublications(int) ([]Publication, error)
 	UpdatePublication(int, Publication) error
+	DeletePublication(int) error
 }
 
 type PublicationRepository interface {
@@ -22,4 +23,5 @@ type PublicationRepository interface {
 	GetPublication(int) (Publication, error)
 	GetPublications(int) ([]Publication, error)
 	UpdatePublication(int, Publication) error
+	DeletePublication(int) error
 }
